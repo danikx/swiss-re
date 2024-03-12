@@ -39,14 +39,14 @@ public class EmployeeManagementServiceImpl implements EmployeeManagementService 
         double average = employee.getAverage();
         double salary = employee.getSalary().doubleValue();
 
-        return salary - average * MANAGER_SALARY_MAX;
+        return Math.abs(salary - average * MANAGER_SALARY_MAX);
     }
 
     public double calculateMinSalaryForManagerDiff(Employee employee){
         double average = employee.getAverage();
         double salary = employee.getSalary().doubleValue();
         
-        return average * MANAGER_SALARY_MIN - salary;
+        return Math.abs(average * MANAGER_SALARY_MIN - salary);
     }
 
     public List<Employee> findManagersEarnLessThanTheyShould(Employee rootEmployee) {

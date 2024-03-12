@@ -12,7 +12,7 @@ public class App {
     public static void main(String[] args) {
 
         if (args.length != 1) {
-            System.out.println("Please provide file path.");
+            System.out.println("Please provide absolute file path.");
             return;
         }
 
