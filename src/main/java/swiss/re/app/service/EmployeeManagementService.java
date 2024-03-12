@@ -12,4 +12,8 @@ public interface EmployeeManagementService {
 
     public List<Employee> findEmployeesHaveLongReporingLine(Employee rootEmployee);
 
+    public double calculateMinSalaryForManagerDiff(Employee employee);
+
+    public double calculateMaxSalaryForManagerDiff(Employee employee);
+
 }

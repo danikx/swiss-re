@@ -32,17 +32,31 @@ import swiss.re.app.model.Employee;
  */
 public class EmployeeManagementServiceImpl implements EmployeeManagementService {
     private final int LEVEL_THRESHOLD = 4;
-    private final int MANAGER_SALARY_MIN = 20; // manager should earns at least 20% more
-    private final int MANAGER_SALARY_MAX = 50; // managers shouldn't earn more
+    private final double MANAGER_SALARY_MIN = 1.2; // manager should earns at least 20% more
+    private final double MANAGER_SALARY_MAX = 1.5; // managers shouldn't earn more
+
+    public double calculateMaxSalaryForManagerDiff(Employee employee){
+        double average = employee.getAverage();
+        double salary = employee.getSalary().doubleValue();
+
+        return salary - average * MANAGER_SALARY_MAX;
+    }
+
+    public double calculateMinSalaryForManagerDiff(Employee employee){
+        double average = employee.getAverage();
+        double salary = employee.getSalary().doubleValue();
+        
+        return average * MANAGER_SALARY_MIN - salary;
+    }
 
     public List<Employee> findManagersEarnLessThanTheyShould(Employee rootEmployee) {
         return findEmployees(rootEmployee,
-                e -> e.getAverage() <= e.getSalary() + e.getSalary() * MANAGER_SALARY_MIN / 100.);
+                e -> e.getAverage() * MANAGER_SALARY_MAX < e.getSalary());
     }
 
     public List<Employee> findManagersEarnMoreThanTheyShould(Employee rootEmployee) {
         return findEmployees(rootEmployee,
-                e -> e.getAverage() > e.getSalary() + e.getSalary() * MANAGER_SALARY_MAX / 100.);
+                e -> e.getAverage() * MANAGER_SALARY_MIN > e.getSalary() );
     }
 
     public List<Employee> findEmployeesHaveLongReporingLine(Employee rootEmployee) {
@@ -52,7 +66,7 @@ public class EmployeeManagementServiceImpl implements EmployeeManagementService 
     }
 
     private List<Employee> findEmployees(Employee rootEmployee, Function<Employee, Boolean> function) {
-        //todo are there ways to optimize this approach?
+        // todo are there ways to optimize this approach?
         List<Employee> result = new ArrayList<>();
         Queue<Employee> queue = new ArrayDeque<>();
 
@@ -62,7 +76,7 @@ public class EmployeeManagementServiceImpl implements EmployeeManagementService 
             Employee currentEmployee = queue.remove();
 
             if (currentEmployee.isManager()) {
-                //todo any optimization ??
+                // todo any optimization ??
                 double average = countEmployeeSalaryAverage(currentEmployee);
                 currentEmployee.setAverage(average);
 

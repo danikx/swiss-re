@@ -77,9 +77,4 @@ public class Employee {
     public List<Employee> getEmployees() {
         return this.employees;
     }
-
-    public double getSalaryVsAverageDiff(){
-        return Math.abs(getSalary().doubleValue() - getAverage());
-    }
-
 }
