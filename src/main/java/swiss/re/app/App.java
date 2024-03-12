@@ -1,6 +1,6 @@
 package swiss.re.app;
 
-import java.io.IOException;
+import java.io.File;
 import java.util.List;
 
 import swiss.re.app.helper.Loader;
@@ -19,7 +19,7 @@ public class App {
         String fileName = args[0];
 
         try {
-            Employee employee = Loader.loadEmployeeHierarchy(fileName);
+            Employee employee = Loader.loadEmployeeHierarchy(new File(fileName));
 
             EmployeeManagementService service = new EmployeeManagementServiceImpl();
 
@@ -27,27 +27,42 @@ public class App {
             List<Employee> managersEarnMore = service.findManagersEarnMoreThanTheyShould(employee);
             List<Employee> employeesLongReportLine = service.findEmployeesHaveLongReporingLine(employee);
 
-            System.out.println("Managers earn less: ");
-            for (Employee e : managersEarnLess) {
-                System.out.println(
-                        e.getId() + " " + e.getFirstName() + " diff: " + service.calculateMinSalaryForManagerDiff(e));
-            }
-
             System.out.println();
-            System.out.println("Managers earn more: ");
+            if(managersEarnLess.isEmpty()){
+                System.out.println("\nThere are no managers who earn less.");
+            } else {
 
-            for (Employee e : managersEarnMore) {
-                System.out.println(
-                        e.getId() + " " + e.getFirstName() + " diff: " + service.calculateMaxSalaryForManagerDiff(e));
+                System.out.println("\nManagers earn less: ");
+                for (Employee e : managersEarnLess) {
+                    System.out.println(
+                            e.getId() + " " + e.getFirstName() + " diff: " + service.calculateMinSalaryForManagerDiff(e));
+                }
             }
 
-            System.out.println();
-            System.out.println("Employees with long report line: ");
-            for (Employee e : employeesLongReportLine) {
-                System.out.println("  - " + e.getId() + " " + e.getFirstName());
+            if(managersEarnMore.isEmpty()){
+                System.out.println("\nThere are no managers whoe earn more.");
+            } else {
+
+                System.out.println("\nManagers earn more: ");
+    
+                for (Employee e : managersEarnMore) {
+                    System.out.println("  - "+
+                            e.getId() + " " + e.getFirstName() + " diff: " + service.calculateMaxSalaryForManagerDiff(e));
+                }
             }
 
-        } catch (IOException e) {
+            if(employeesLongReportLine.isEmpty()){
+                System.out.println("\nThere are not employees with long report line.");
+            } else {
+
+                System.out.println();
+                System.out.println("Employees with long report line: ");
+                for (Employee e : employeesLongReportLine) {
+                    System.out.println("  - " + e.getId() + " " + e.getFirstName());
+                }
+            }
+
+        } catch (Exception e) {
             System.out.println("File not found: " + fileName);
         }
     }
